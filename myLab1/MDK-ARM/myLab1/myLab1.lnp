@@ -1,0 +1,24 @@
+--cpu Cortex-M0
+"mylab1\startup_stm32f072xb.o"
+"mylab1\main.o"
+"mylab1\stm32f0xx_hal_msp.o"
+"mylab1\stm32f0xx_it.o"
+"mylab1\stm32f0xx_hal_rcc_ex.o"
+"mylab1\stm32f0xx_hal_dma.o"
+"mylab1\stm32f0xx_hal_tim_ex.o"
+"mylab1\stm32f0xx_hal_tim.o"
+"mylab1\stm32f0xx_hal_i2c.o"
+"mylab1\stm32f0xx_hal_pwr.o"
+"mylab1\stm32f0xx_hal_flash.o"
+"mylab1\stm32f0xx_hal_i2c_ex.o"
+"mylab1\stm32f0xx_hal_flash_ex.o"
+"mylab1\stm32f0xx_hal_cortex.o"
+"mylab1\stm32f0xx_hal.o"
+"mylab1\stm32f0xx_hal_pwr_ex.o"
+"mylab1\stm32f0xx_hal_rcc.o"
+"mylab1\stm32f0xx_hal_gpio.o"
+"mylab1\system_stm32f0xx.o"
+--library_type=microlib --strict --scatter "myLab1\myLab1.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "myLab1.map" -o myLab1\myLab1.axf
