@@ -52,14 +52,14 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-
+void EXTI0_1_IRQHandler(void);
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-int my_sys_tick_count = 0;
+uint32_t my_sys_tick_count = 0;
 
 /* USER CODE END 0 */
 
@@ -176,7 +176,7 @@ int pressed = 0;
                       
                       
   
-  //++++++++++++++++ SET USER BUTTON ++++++++++++++++++++
+//++++++++++++++++ SET USER BUTTON ++++++++++++++++++++
   
   //SET BUTTON MODE to 00
     GPIOA->MODER &= ((1<<0) | (1<<1));
@@ -188,7 +188,32 @@ int pressed = 0;
     GPIOA->PUPDR &= ~( 1<<0); //SET bit 0
     GPIOA->PUPDR |=  ( 1<<1); //CLEAR bit 1
 
-// 6-  
+//------------------  INTERRUPT EXT   ----------------------
+
+/* (2) Select Port A for pin 0 external interrupt by writing 0000 in EXTI0 (reset value)*/
+
+/* (3) Configure the corresponding mask bit in the EXTI_IMR register */
+
+/* (4) Configure the Trigger Selection bits of the Interrupt line on rising edge*/
+
+/* (5) Configure the Trigger Selection bits of the Interrupt line on falling edge*/
+
+
+RCC->APB2ENR |= 0x0001;
+SYSCFG->EXTICR[1] |= (uint16_t)SYSCFG_EXTICR1_EXTI0_PA; /* (2) */
+
+EXTI->IMR = 0x0001; /* (3)  Mask the MRO */ 
+EXTI->RTSR = 0x0001; /* (4) Rising Edge Enabled */ 
+EXTI->FTSR = 0x0000; /* (5) Falling Edge Disabled */
+
+/* Configure NVIC for External Interrupt */
+
+  /* (1) Enable Interrupt on EXTI0_1 */
+  NVIC_EnableIRQ(EXTI0_1_IRQn); 
+  
+  /* (2) Set priority for EXTI0_1 */
+  NVIC_SetPriority(EXTI0_1_IRQn,1); 
+
   
 /*
   PC7 = BLUE
@@ -283,6 +308,15 @@ void _Error_Handler(char *file, int line)
   {
   }
   /* USER CODE END Error_Handler_Debug */
+}
+
+void EXTI0_1_IRQHandler(void)
+{
+    // TOGGLE bits 8,9
+    GPIOC->ODR ^=   ((1<<9)   //INVERT PC9
+                  | (1<<8));  //INVERT PC8
+
+    EXTI->PR |= 0x0001;
 }
 
 #ifdef  USE_FULL_ASSERT
