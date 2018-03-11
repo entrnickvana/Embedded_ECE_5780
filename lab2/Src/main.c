@@ -212,8 +212,15 @@ EXTI->FTSR = 0x0000; /* (5) Falling Edge Disabled */
   NVIC_EnableIRQ(EXTI0_1_IRQn); 
   
   /* (2) Set priority for EXTI0_1 */
-  NVIC_SetPriority(EXTI0_1_IRQn,1); 
+  //NVIC_SetPriority(EXTI0_1_IRQn,1); 
 
+  // Checkoff 2 Part B
+  NVIC_SetPriority(EXTI0_1_IRQn,1);  
+
+
+  // Checkoff 2 Part A
+  /* Set Systick Interrupt Priority  */
+  NVIC_SetPriority(SysTick_IRQn,2); 
   
 /*
   PC7 = BLUE
@@ -222,7 +229,7 @@ EXTI->FTSR = 0x0000; /* (5) Falling Edge Disabled */
   PA0 = User Button
 */
 
-//HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET); // Start PC8 high
+ //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET); // Start PC8 high
 
   // INITIALIZE PC9 as HI
   GPIOC->ODR |= ((1<<9));
@@ -313,6 +320,12 @@ void _Error_Handler(char *file, int line)
 void EXTI0_1_IRQHandler(void)
 {
     // TOGGLE bits 8,9
+    GPIOC->ODR ^=   ((1<<9)   //INVERT PC9
+                  | (1<<8));  //INVERT PC8
+
+    HAL_Delay(1500000);
+
+        // TOGGLE bits 8,9
     GPIOC->ODR ^=   ((1<<9)   //INVERT PC9
                   | (1<<8));  //INVERT PC8
 
